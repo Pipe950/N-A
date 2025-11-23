@@ -1,0 +1,33 @@
+
+const { default: makeWASocket, useMultiFileAuthState, Browsers } = require('@whiskeysockets/baileys')
+const fs = require('fs')
+
+async function start() {
+  const { state, saveCreds } = await useMultiFileAuthState('./auth')
+  const sock = makeWASocket({
+    auth: state,
+    printQRInTerminal: true,
+    browser: Browsers.macOS('Desktop')
+  })
+
+  sock.ev.on('creds.update', saveCreds)
+
+  sock.ev.on('messages.upsert', async ({ messages }) => {
+    const msg = messages[0]
+    if (!msg.message) return
+    const from = msg.key.remoteJid
+    const text = msg.message.conversation || msg.message.extendedTextMessage?.text
+    if (!text) return
+
+    if (text === '!menu') {
+      const menu = fs.readFileSync('./src/menu.txt','utf8')
+      await sock.sendMessage(from, { text: menu })
+    }
+
+    if (text === '!neko') {
+      await sock.sendMessage(from, { text: "Neko 😺💗 https://nekos.best/api/v2/neko/1" })
+    }
+  })
+}
+
+start()

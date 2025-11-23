@@ -1,0 +1,8 @@
+
+🔥 *Naufranekos Bot — Super Menú* 🔥
+
+📌 *Comandos principales*
+!menu — Muestra este menú
+!neko — Imagen/gif neko
+
+✨ Bot creado para Pipe950 ✨
